@@ -20,7 +20,8 @@ conda activate $conda_env_name
 echo ""
 echo ""
 echo "****************** Installing pytorch with cuda10.2 ******************"
-conda install -y pytorch torchvision cudatoolkit=10.2 -c pytorch
+# conda install -y pytorch torchvision cudatoolkit=10.2 -c pytorch
+conda install pytorch==1.11.0 torchvision==0.5.0 cudatoolkit=10.2 -c pytorch
 
 echo ""
 echo ""
@@ -63,11 +64,6 @@ echo ""
 echo ""
 echo "****************** Installing jpeg4py python wrapper ******************"
 pip install jpeg4py
-
-echo ""
-echo ""
-echo "****************** Installing gdown ******************"
-pip install gdown
 
 
 echo ""

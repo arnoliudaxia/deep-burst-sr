@@ -6,3 +6,6 @@
 **/*.pth
 admin/local.py
 pretrained_networks/*
+Dataset/
+None/
+Saving/
