@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import torch
 import cv2
 import numpy as np
@@ -31,8 +32,10 @@ class SyntheticBurstVal(torch.utils.data.Dataset):
         """
         root = env_settings().synburstval_dir if root is None else root
         self.root = root
-        self.burst_list = list(range(300))
+        bursts_dir = os.path.join(root, 'bursts')
         self.burst_size = 14
+        self.burst_list = list(range(len([d for d in os.listdir(bursts_dir) if os.path.isdir(os.path.join(bursts_dir, d))])))
+        
 
     def initialize(self):
         pass

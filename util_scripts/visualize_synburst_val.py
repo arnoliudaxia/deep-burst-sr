@@ -58,7 +58,7 @@ def visualize_synburst_val(mode='srgb'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Visualize RAW bursts')
-    parser.add_argument('mode', type=str, help='Visualization mode, can be raw, linear, or srgb')
+    parser.add_argument('--mode', type=str, help='Visualization mode, can be raw, linear, or srgb')
 
     args = parser.parse_args()
 

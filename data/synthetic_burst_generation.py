@@ -83,7 +83,8 @@ def rgb2rawburst(image, burst_size, downsample_factor=1, burst_transformation_pa
                                                    interpolation_type=interpolation_type)
 
     # mosaic
-    image_burst = rgb2raw.mosaic(image_burst_rgb.clone())
+    image_burst = rgb2raw.mosaic(image_burst_rgb.clone(),mode="rggb") #! 调整Bayerpattern
+    # image_burst = rgb2raw.mosaic(image_burst_rgb.clone(),mode="grbg") #! 调整Bayerpattern
 
     # Add noise
     if image_processing_params['add_noise']:

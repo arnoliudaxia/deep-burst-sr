@@ -5,11 +5,11 @@ import os
 import numpy as np
 import cv2
 import pickle as pkl
-
+from data.postprocessing_functions import SimplePostProcess
 
 def main():
-    image_folder_path = 'PATH_TO_FOLDER_CONTAINING_SRGB_IMAGES'
-    out_dir = 'PATH_WHERE_GENERATED_BURSTS_ARE_SAVED'
+    image_folder_path = '/public/home/liuyf7/Projects/deep-burst-sr/Dataset/phoneRGB'
+    out_dir = '/public/home/liuyf7/Projects/deep-burst-sr/Dataset/phoneRGB-SyntheticBurst'
 
     crop_sz = (1024 + 24*2, 1024 + 24*2)
     burst_sz = 14
@@ -32,11 +32,14 @@ def main():
                                                           image_processing_params=image_processing_params)
     dataset = sampler.IndexedImage(image_dataset, processing=data_processing)
 
+    process_fn = SimplePostProcess(return_np=True)
+
     for i, d in enumerate(dataset):
         burst = d['burst']
         gt = d['frame_gt']
         meta_info = d['meta_info']
         meta_info['frame_num'] = i
+        srgb= d['burst_rgb']
 
         os.makedirs('{}/{:04d}'.format(out_dir, i), exist_ok=True)
 
@@ -44,6 +47,7 @@ def main():
 
         for bi, b in enumerate(burst_np):
             cv2.imwrite('{}/{:04d}/im_raw_{:02d}.png'.format(out_dir, i, bi), b)
+
 
         gt_np = (gt.permute(1, 2, 0).clamp(0.0, 1.0) * 2 ** 14).numpy().astype(np.uint16)
         cv2.imwrite('{}/{:04d}/im_rgb.png'.format(out_dir, i), gt_np)

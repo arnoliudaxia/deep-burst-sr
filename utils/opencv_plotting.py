@@ -381,7 +381,9 @@ class BurstSRVis():
 
             disp_image = self._draw_pane(disp_image, zoom_images, zoom_titles, self.num_panes - 1)
 
-        cv.imshow('Display', disp_image)
+        # cv.imshow('Display', disp_image)
+        cv.imwrite('saved_image.jpg', disp_image)
+
         cv.setMouseCallback("Display", self._mouse_callback)
         return
 
@@ -405,14 +407,14 @@ class BurstSRVis():
                 zoom_im = cv.resize(zoom_im, dsize=None, fx=8, fy=8, interpolation=cv.INTER_NEAREST)
                 cv.imwrite('{}/{}_crop.png'.format(save_dir, title), zoom_im)
 
-        norm_factor = self.data[0]['images'][0].shape[0] / self.data[self.prediction_block_id]['images'][0].shape[0]
-        r1 = int(norm_factor * self.zoom_roi_coords[0][1])
-        r2 = int(norm_factor * self.zoom_roi_coords[1][1])
-        c1 = int(norm_factor * self.zoom_roi_coords[0][0])
-        c2 = int(norm_factor * self.zoom_roi_coords[1][0])
+        # norm_factor = self.data[0]['images'][0].shape[0] / self.data[self.prediction_block_id]['images'][0].shape[0]
+        # r1 = int(norm_factor * self.zoom_roi_coords[0][1])
+        # r2 = int(norm_factor * self.zoom_roi_coords[1][1])
+        # c1 = int(norm_factor * self.zoom_roi_coords[0][0])
+        # c2 = int(norm_factor * self.zoom_roi_coords[1][0])
 
-        with open('{}/crop_info.json'.format(save_dir), 'w') as outfile:
-            json.dump({'r1': r1, 'r2': r2, 'c1': c1, 'c2': c2}, outfile)
+        # with open('{}/crop_info.json'.format(save_dir), 'w') as outfile:
+        #     json.dump({'r1': r1, 'r2': r2, 'c1': c1, 'c2': c2}, outfile)
 
     def plot(self, data):
         if not isinstance(data, (tuple, list)):
@@ -429,39 +431,41 @@ class BurstSRVis():
         self.data_sizes = [[d['images'][0].shape[1], d['images'][0].shape[0]] for d in data]
 
         self._draw()
+        self.save_data()
 
-        while True:
-            key = cv.waitKey(0)
-            if key == ord('n'):
-                return 'continue'
-            if key == ord('y'):
-                return 'save'
-            elif key == ord('q'):
-                return 'stop'
-            elif key == ord('r'):
-                self._reset()
-            elif key == ord(' '):
-                self.show_all_images[self.selected_pane_id] = not self.show_all_images[self.selected_pane_id]
-                self._draw()
-            elif key == 83 or key == ord('d'):     # right
-                pane_num_images = len(data[self.selected_pane_id]['images']) if self.selected_pane_id != (self.num_panes - 1) else len(data[self.prediction_block_id]['images'])
-                self.pane_image_id[self.selected_pane_id] = (self.pane_image_id[self.selected_pane_id] + 1) % pane_num_images
-                self._draw()
-            elif key == 81 or key == ord('a'):     # left
-                pane_num_images = len(data[self.selected_pane_id]['images']) if self.selected_pane_id != (
-                            self.num_panes - 1) else len(data[self.prediction_block_id]['images'])
-                self.pane_image_id[self.selected_pane_id] = (self.pane_image_id[
-                                                                 self.selected_pane_id] - 1) % pane_num_images
-                self._draw()
-            elif key == 82 or key == ord('w'):     # up
-                num_panes = self.num_panes if self.zoom_roi_coords is not None else self.num_data_blocks
-                self.selected_pane_id = (self.selected_pane_id - 1) % num_panes
-                self._draw()
-            elif key == 84 or key == ord('s'):     # down
-                num_panes = self.num_panes if self.zoom_roi_coords is not None else self.num_data_blocks
-                self.selected_pane_id = (self.selected_pane_id + 1) % num_panes
-                self._draw()
-            elif key == ord('p'):     # save
-                self.save_data()
+        # while True:
+            # return 'continue'
+            # key = cv.waitKey(0)
+            # if key == ord('n'):
+            #     return 'continue'
+            # if key == ord('y'):
+            #     return 'save'
+            # elif key == ord('q'):
+            #     return 'stop'
+            # elif key == ord('r'):
+            #     self._reset()
+            # elif key == ord(' '):
+            #     self.show_all_images[self.selected_pane_id] = not self.show_all_images[self.selected_pane_id]
+            #     self._draw()
+            # elif key == 83 or key == ord('d'):     # right
+            #     pane_num_images = len(data[self.selected_pane_id]['images']) if self.selected_pane_id != (self.num_panes - 1) else len(data[self.prediction_block_id]['images'])
+            #     self.pane_image_id[self.selected_pane_id] = (self.pane_image_id[self.selected_pane_id] + 1) % pane_num_images
+            #     self._draw()
+            # elif key == 81 or key == ord('a'):     # left
+            #     pane_num_images = len(data[self.selected_pane_id]['images']) if self.selected_pane_id != (
+            #                 self.num_panes - 1) else len(data[self.prediction_block_id]['images'])
+            #     self.pane_image_id[self.selected_pane_id] = (self.pane_image_id[
+            #                                                      self.selected_pane_id] - 1) % pane_num_images
+            #     self._draw()
+            # elif key == 82 or key == ord('w'):     # up
+            #     num_panes = self.num_panes if self.zoom_roi_coords is not None else self.num_data_blocks
+            #     self.selected_pane_id = (self.selected_pane_id - 1) % num_panes
+            #     self._draw()
+            # elif key == 84 or key == ord('s'):     # down
+            #     num_panes = self.num_panes if self.zoom_roi_coords is not None else self.num_data_blocks
+            #     self.selected_pane_id = (self.selected_pane_id + 1) % num_panes
+            #     self._draw()
+            # elif key == ord('p'):     # save
+            #     self.save_data()
 
 

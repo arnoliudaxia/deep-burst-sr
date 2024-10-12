@@ -76,7 +76,7 @@ class SyntheticBurstProcessing(BaseProcessing):
 
         self.crop_scale_range = crop_scale_range
         self.crop_ar_range = crop_ar_range
-        self.return_rgb_busrt = return_rgb_busrt
+        self.return_rgb_busrt = True
         self.interpolation_type = interpolation_type
         self.random_crop = random_crop
 
